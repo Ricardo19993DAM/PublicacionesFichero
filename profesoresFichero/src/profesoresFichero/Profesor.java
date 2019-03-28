@@ -53,4 +53,9 @@ public class Profesor implements Serializable {
 	public int cuantasPubli() {
 		return publicaciones.size();
 	}
+	public void leerPubli() {
+		for(int i=0;i<publicaciones.size();i++) {
+			publicaciones.get(i).getDatos();
+		}
+	}
 }

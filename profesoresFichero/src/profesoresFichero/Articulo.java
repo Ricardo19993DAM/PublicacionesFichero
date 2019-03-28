@@ -30,4 +30,8 @@ public class Articulo extends Publicacion implements Serializable{
 		super.setDatos();
 		medio=Util.introducirCadena("Introduce el medio: ");
 	}
+	public void getDatos() {
+		super.getDatos();
+		System.out.println("Medio: "+medio);
+	}
 }

@@ -30,5 +30,9 @@ public class Publicacion implements Serializable {
 		fechaPubli=Util.leerFecha("Introduce fecha de publicacion con formato (dd/mm/aaaa): ");
 		titulo=Util.introducirCadena("Introduce titulo: ");
 	}
+	public void getDatos() {
+		System.out.println(titulo+" publicado en"+fechaPubli.getDayOfMonth()+"/"+fechaPubli.getMonthValue()+"/"+fechaPubli.getYear());
+		
+	}
 	
 }

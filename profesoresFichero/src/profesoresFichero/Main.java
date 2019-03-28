@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class Main {
@@ -155,6 +156,47 @@ public class Main {
 	private static void masPubli(File fich) {
 		int cont = Util.calculoFichero(fich);
 		ArrayList <Profesor>profesores=gererarArrayList(fich,cont);
+		System.out.println("Introduce email: ");
+		String auxEmail=Util.introducirCadena();
+		boolean cambio=false;
+		for(int i=0;i<cont;i++) {
+			if(profesores.get(i).getEmail().equalsIgnoreCase(auxEmail)) {
+				profesores.get(i).leerPubli();
+				System.out.println("Quieres añadir alguna publicación (S/N)?");
+				char opc=Util.respCharList("SN");
+				while(opc=='S') {
+					cambio=true;
+					Publicacion auxPubli;
+					System.out.println("Articulo o Libro (P/L)? ");
+					char opc2=Util.respCharList("AL");
+					if(opc2=='A') {
+						auxPubli=new Articulo();
+					}else {
+						auxPubli=new Libro();
+					}
+					auxPubli.setDatos();
+					profesores.get(i).addPubli(auxPubli);
+					System.out.println("Quieres añadir más publicaciones(S/N)?");
+					opc=Util.respCharList("SN");
+				}
+				break;
+			}
+		}
+		if(cambio) {
+			FileOutputStream fos=null;
+			ObjectOutputStream oos=null;
+			try {
+				fos=new FileOutputStream(fich);
+				oos=new ObjectOutputStream(fos);
+				for(Profesor p:profesores) {
+					oos.writeObject(p);
+				}
+				oos.close();
+				fos.close();
+			} catch (IOException e) {
+				System.out.println("Error IO");
+			}
+		}
 
 	}
 
@@ -179,8 +221,28 @@ public class Main {
 	}
 
 	private static void mostrarGalardonados(File fich) {
-		// TODO Auto-generated method stub
-		////asddasdsdaasdasdsadsadsa lolololol
+		int cont = Util.calculoFichero(fich);
+		ArrayList <Profesor>profesores=gererarArrayList(fich,cont);
+		System.out.println("Introduce año: ");
+		int annio=Util.leerInt();
+		boolean hay=false;
+		for(Profesor p:profesores) {
+			for(Publicacion pu:p.getPublicaciones()) {
+				if(pu instanceof Libro) {
+					if(((Libro) pu).isPremiado() && pu.getFechaPubli().getYear()==annio) {
+						if(!hay) {
+							hay=true;
+							System.out.println("Fecha publicacion   Titulo             ISBN           Nombre profesor              Nombre departamento");
+						}
+						DateTimeFormatter formateador=DateTimeFormatter.ofPattern("month-yyyy");
+						System.out.println(pu.getFechaPubli().format(formateador)+"   "+pu.getTitulo()+"  "+((Libro) pu).getIsbn()+p.getNombre()+" "+p.getEmail());
+					}
+				}
+			}
+		}
+		if(!hay) {
+			System.out.println("No se han encontrado libros premiados");
+		}
 	}
 
 	private static void listado(File fich) {

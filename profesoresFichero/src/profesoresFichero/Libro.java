@@ -41,4 +41,8 @@ public class Libro extends Publicacion implements Serializable{
 			premiado=false;
 		}
 	}
+	public void getDatos() {
+		super.getDatos();
+		System.out.println("ISBN: "+isbn+" Premiado: "+((premiado)?"Si":"no"));
+	}
 }
